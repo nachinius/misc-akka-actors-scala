@@ -1,5 +1,7 @@
-import akka.actor._
-import akka.actor.ReceiveTimeout
+package com.nachinius.actors.fsm
+
+import akka.actor.{ReceiveTimeout, _}
+
 import scala.concurrent.duration._
 
 /**

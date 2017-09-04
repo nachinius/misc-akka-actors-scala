@@ -1,4 +1,6 @@
-import akka.actor.{ActorRef, FSM}
+package com.nachinius.actors.fsm
+
+import akka.actor.FSM
 
 object SystemA {
   trait StateA

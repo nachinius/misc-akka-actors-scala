@@ -1,8 +1,8 @@
-import akka.actor.ActorSystem
-import akka.actor._
-import akka.testkit.{ImplicitSender, TestActors, TestKit}
+package com.nachinius.actors.fsm
+
+import akka.actor.{ActorSystem, _}
+import akka.testkit.{ImplicitSender, TestKit}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
-import scala.concurrent.duration._
 
 class SystemAlphaTest extends TestKit(ActorSystem("MySpec")) with ImplicitSender
   with WordSpecLike with Matchers with BeforeAndAfterAll {

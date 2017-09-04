@@ -1,10 +1,12 @@
-import akka.actor.ActorSystem
-import akka.actor._
-import akka.testkit.{ImplicitSender, TestActors, TestKit}
+package com.nachinius.actors.fsm
+
+import akka.actor.{ActorSystem, _}
+import akka.testkit.{ImplicitSender, TestKit}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+
 import scala.concurrent.duration._
 
-class MyActorWithTimeOutTest() extends TestKit(ActorSystem("MySpec")) with ImplicitSender
+class MyActorWithTimersTest() extends TestKit(ActorSystem("MySpec")) with ImplicitSender
   with WordSpecLike with Matchers with BeforeAndAfterAll {
 
   override def afterAll {
@@ -14,7 +16,7 @@ class MyActorWithTimeOutTest() extends TestKit(ActorSystem("MySpec")) with Impli
   "An Echo actor" must {
 
     "walk the path" in {
-      val echo = system.actorOf(Props[MyActorWithTimeOut])
+      val echo = system.actorOf(Props[MyActorWithTimers])
       echo ! "Hello"
       echo ! "continue"
       expectMsg("receive continue")
@@ -22,13 +24,13 @@ class MyActorWithTimeOutTest() extends TestKit(ActorSystem("MySpec")) with Impli
       expectMsg("receive last")
     }
     "back to start when no message" in {
-      val echo = system.actorOf(Props[MyActorWithTimeOut])
+      val echo = system.actorOf(Props[MyActorWithTimers])
       echo ! "Hello"
       expectNoMsg(100 milliseconds)
-      expectMsg("back to start")
+      expectMsg("back to start 2")
     }
     "walk the path twice" in {
-      val echo = system.actorOf(Props[MyActorWithTimeOut])
+      val echo = system.actorOf(Props[MyActorWithTimers])
       echo ! "Hello"
       echo ! "continue"
       expectMsg("receive continue")
@@ -42,3 +44,4 @@ class MyActorWithTimeOutTest() extends TestKit(ActorSystem("MySpec")) with Impli
     }
   }
 }
+

@@ -1,5 +1,6 @@
+package com.nachinius.actors.fsm
+
 import akka.actor.{ActorRef, FSM, Props}
-import scala.concurrent.duration._
 
 object SystemAlpha {
 
@@ -22,12 +23,11 @@ object SystemAlpha {
 
 /**
   * An actor that has State and an deeper State.
-  * Inner state is handled by another actor (SystemA)
+  * Inner state is handled by another actor (com.nachinius.actors.fsm.SystemA)
   */
 class SystemAlpha extends FSM[SystemAlpha.State, SystemAlpha.Data] {
 
   import SystemAlpha._
-  import context._
 
   startWith(Waiting, Data(None, None))
 
@@ -50,6 +50,8 @@ class SystemAlpha extends FSM[SystemAlpha.State, SystemAlpha.Data] {
       // if sender is the raelayed actor, then send the message to the  actor that started the FSM
       // code is in purpose complex because i'm playing with functional functions
       state.original.filter(_ eq sender()).flatMap(_ => state.relay).orElse(state.original).foreach(_ forward msg)
+      // another tricky way to do it
+//      Seq(state.original, state.relay).flatten.filterNot(_ equals sender()).foreach(_ forward msg)
       stay
   }
   initialize()
