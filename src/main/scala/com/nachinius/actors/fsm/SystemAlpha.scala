@@ -17,7 +17,7 @@ object SystemAlpha {
   trait SystemAlphaMessages
 
   // For telling Main System that the state is finished
-  case class End(msg: String) extends SystemAlphaMessages
+  case class End() extends SystemAlphaMessages
 
 }
 
@@ -41,8 +41,7 @@ class SystemAlpha extends FSM[SystemAlpha.State, SystemAlpha.Data] {
       stay
   }
   when(InA) {
-    case Event(End(msg), state) =>
-      state.original.foreach(_ forward msg)
+    case Event(End(), state) =>
       goto(Waiting) using Data(None, None)
     // Realy to A
     case Event(msg: String, state) =>

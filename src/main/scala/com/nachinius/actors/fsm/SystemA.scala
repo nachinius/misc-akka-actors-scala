@@ -30,7 +30,8 @@ class SystemA extends FSM[SystemA.StateA, String] {
   }
   when(DosA) {
     case Event(msg: String, str) =>
-      parent ! SystemAlpha.End(str + msg)
+      parent ! str + msg
+      parent ! SystemAlpha.End()
       stop()
   }
   initialize()
