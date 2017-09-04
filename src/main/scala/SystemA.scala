@@ -1,4 +1,4 @@
-import akka.actor.FSM
+import akka.actor.{ActorRef, FSM}
 
 object SystemA {
   trait StateA
@@ -17,24 +17,19 @@ class SystemA extends FSM[SystemA.StateA, String] {
   import SystemA._
 
   startWith(UnoA, "")
-  context.parent ! SystemAlpha.Through("welcome to A")
-  context.parent ! SystemAlpha.Through("1 o 2")
+  import context.parent
+  parent ! "welcome to A"
+  parent ! "1 o 2"
   when(UnoA) {
     case Event(msg: String, _) =>
-      context.parent ! SystemAlpha.Through("3 o 4")
+      parent ! s"got $msg"
+      parent ! "3 o 4"
       goto(DosA) using msg
   }
   when(DosA) {
     case Event(msg: String, str) =>
-      context.parent ! SystemAlpha.End(SystemAlpha.Through(str + msg))
-      context stop self // suicide because our job is done
-      goto(Finished) // safeguard to avoid
-  }
-  when(Finished) {
-    case _ => {
-      context stop self // insist on suicide
-      stay
-    }
+      parent ! SystemAlpha.End(str + msg)
+      stop()
   }
   initialize()
 }

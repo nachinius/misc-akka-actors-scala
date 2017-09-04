@@ -18,6 +18,7 @@ class SystemAlphaTest extends TestKit(ActorSystem("MySpec")) with ImplicitSender
       expectMsg("welcome to A")
       expectMsg("1 o 2")
       alpha ! "2"
+      expectMsg("got 2")
       expectMsg("3 o 4")
       alpha ! "4"
       expectMsg("24")
