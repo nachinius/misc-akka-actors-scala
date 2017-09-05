@@ -20,4 +20,13 @@ class KeyValueTest  extends TestKit(ActorSystem("MySpec")) with ImplicitSender
     }
   }
 
+  "impure future compiler" must{
+    "work with futures" in {
+      import system.dispatcher
+      import cats.instances.future._
+
+      val p=program.foldMap(KeyValue.impureFutureCompiler)
+      p.map(x=>assert(x==Some(14)))
+    }
+  }
 }

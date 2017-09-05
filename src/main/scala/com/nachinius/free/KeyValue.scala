@@ -1,5 +1,6 @@
 package com.nachinius.free
 
+import akka.Done
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.pattern.ask
 
@@ -12,7 +13,7 @@ import cats.arrow.FunctionK
 import cats.{Id, ~>}
 
 import scala.collection.mutable
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class KeyValue {
 
@@ -95,6 +96,35 @@ object KeyValue {
       }
   }
 
+  def impureFutureCompiler(implicit ec: ExecutionContext): KVStoreADT ~> Future = new (KVStoreADT ~> Future) {
+
+    import cats.instances.future._
+
+    // a very simple (and imprecise) key-value store
+    val kvs = mutable.Map.empty[String, Any]
+
+    def apply[A](fa: KVStoreADT[A]): Future[A] =
+      fa match {
+        case Put(key, value) =>
+
+          kvs(key) = value
+          Future {
+            ()
+          }
+        case Get(key) =>
+
+          Future {
+            (kvs.get(key).map(_.asInstanceOf[A]))
+          }
+        case Delete(key) =>
+
+          kvs.remove(key)
+          Future {
+            ()
+          }
+      }
+  }
+
 
   case class ActorState(system: ActorSystem) {
 
@@ -111,6 +141,47 @@ object KeyValue {
 
           state = state.updated(k, v)
 
+
+      }
+    }
+
+    import akka.pattern.ask
+
+    //    val system = ActorSystem()
+    val ref = system.actorOf(Props(new KeyValueActor))
+    implicit val timeout = Timeout(5 seconds) // needed for `?` below
+
+    def terminate() = system.terminate()
+
+    import system.dispatcher
+
+    def tell(x: Any): Unit =
+      ref ! x
+
+    def ask2(x: Any): Future[Any] = {
+      ask(ref, x)
+    }
+
+  }
+
+  case class ActorFutureState(system: ActorSystem) {
+
+    case class Done()
+
+    class KeyValueActor extends Actor {
+      var state = Map[String, Any]()
+
+      override def receive: Receive = {
+        case (k: String) =>
+
+          sender() ! state(k)
+        case (k: String, None) =>
+          state = state - k
+          sender() ! Done
+        case (k: String, Some(v)) =>
+
+          state = state.updated(k, v)
+          sender() ! Done
 
       }
     }
@@ -168,17 +239,24 @@ object KeyValue {
     }
   }
 
-  class KeyValueActor extends Actor {
-    var state = Map[String, Any]()
+//  type FutureKVStoreActor[A] = Future[State[ActorState, A]]
+//  val actorFutureCompiler: KVStoreADT ~> FutureKVStoreActor = new (KVStoreADT ~> FutureKVStoreActor) {
+//
+//
+//    override def apply[A](fa: KVStoreADT[A]): FutureKVStoreActor[A] = fa match {
+//      case Put(key, value) =>
+//
+//
+//
+//      case Get(key) =>
+//
+//
+//      case Delete(key) =>
+//
+//
+//
+//    }
+//  }
 
-    override def receive: Receive = {
-      case (k: String) =>
-        state(k)
-      case (k: String, None) =>
-        state = state - k
-      case (k: String, Some(v)) =>
-        state = state.updated(k, v)
-    }
-  }
-
+  
 }
