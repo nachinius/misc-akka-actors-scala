@@ -18,13 +18,24 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-persistence" % akkaVersion
+)
+
+libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test,
   "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion
 )
 
-libraryDependencies += "io.spray" %%  "spray-json" % "1.3.3"
+libraryDependencies += "io.spray" %% "spray-json" % "1.3.3"
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
+libraryDependencies ++= Seq(
+  "org.iq80.leveldb" % "leveldb" % "0.7",
+  "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8"
+)
+val catsversion = "1.0.0-MF"
+libraryDependencies += "org.typelevel" %% "cats-core" % catsversion
+libraryDependencies += "org.typelevel" %% "cats-free" % catsversion

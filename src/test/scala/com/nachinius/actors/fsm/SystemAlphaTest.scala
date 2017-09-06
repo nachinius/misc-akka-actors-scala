@@ -2,6 +2,7 @@ package com.nachinius.actors.fsm
 
 import akka.actor.{ActorSystem, _}
 import akka.testkit.{ImplicitSender, TestKit}
+import com.nachinius.actors.persistence.{Cmd, ExamplePersistentActorTest}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 
 class SystemAlphaTest extends TestKit(ActorSystem("MySpec")) with ImplicitSender
@@ -27,4 +28,5 @@ class SystemAlphaTest extends TestKit(ActorSystem("MySpec")) with ImplicitSender
     }
 
   }
+
 }
