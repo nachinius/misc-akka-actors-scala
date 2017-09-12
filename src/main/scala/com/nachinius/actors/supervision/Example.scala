@@ -1,9 +1,6 @@
 package com.nachinius.actors.supervision
 
-// http://doc.akka.io/docs/akka/2.5.4/scala/fault-tolerance.html
-class Example {
-
-}
+// after http://doc.akka.io/docs/akka/2.5.4/scala/fault-tolerance.html
 
 import akka.actor.{Actor, Props}
 

@@ -1,5 +1,5 @@
 package com.nachinius.actors.persistence
-
+// after akka documentation on persistence
 
 import akka.actor._
 import akka.persistence._

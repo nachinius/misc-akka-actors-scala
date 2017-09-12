@@ -22,8 +22,9 @@ object SystemAlpha {
 }
 
 /**
-  * An actor that has State and an deeper State.
-  * Inner state is handled by another actor (com.nachinius.actors.fsm.SystemA)
+  * Using FSM to handle state in a toy situation where the first system (this one)
+  * relays a substate to another FSM that this system creates. This system works as a proxy
+  * for every message between its subsystem and the user.
   */
 class SystemAlpha extends FSM[SystemAlpha.State, SystemAlpha.Data] {
 

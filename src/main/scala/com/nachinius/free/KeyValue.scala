@@ -1,3 +1,10 @@
+/************************************************************
+  * Using free monads simplest example with different compilers:
+  *   - With mutable state (provided by the tutorial)
+  *   - With immutable state (provided by the tutorial)
+  *   - With akka actors without returning values
+  *   - With akka actors returning futures
+  */
 package com.nachinius.free
 
 import akka.actor.{Actor, ActorSystem, Props}
